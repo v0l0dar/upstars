@@ -1,0 +1,17 @@
+// colors
+$primary-background: #5535be;
+$primary-color: #f7f7f7;
+$secondary-color: #13e984;
+
+$primary-progress: #ffffff;
+$secondary-progress: rgba(255, 255, 255, 0.42);
+
+$ui-mobile: 768px;
+
+// mixins
+
+@mixin ui-mobile-only {
+  @media (max-width: ($ui-mobile - 1px)) {
+    @content;
+  }
+}
