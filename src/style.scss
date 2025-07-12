@@ -22,3 +22,17 @@ body {
   min-height: 100vh;
   background: $primary-background;
 }
+
+button {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

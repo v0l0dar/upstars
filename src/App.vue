@@ -1,8 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import StoryPlayer from "./components/StoryPlayer.vue";
+</script>
 
 <template>
   <main class="app">
-    <div class="app__content">video stories</div>
+    <div class="app__content">
+      <StoryPlayer />
+    </div>
   </main>
 </template>
 
