@@ -7,10 +7,6 @@ const props = defineProps<{
   current: number;
 }>();
 
-// const props = defineProps<{
-//   items: Story[];
-// }>();
-
 const getWidth = (index: number): string => {
   if (index < props.current) return "100%";
   if (index === props.current) return `${props.progress}%`;
@@ -21,7 +17,11 @@ const getWidth = (index: number): string => {
 <template>
   <div class="story-progress">
     <div class="story-progress__segment" v-for="(item, i) in total">
-      <div class="story-progress__fill" :style="{ width: getWidth(i) }"></div>
+      <div
+        class="story-progress__fill"
+        :class="{ active: i === current }"
+        :style="{ width: getWidth(i) }"
+      ></div>
     </div>
   </div>
 </template>
@@ -33,12 +33,16 @@ const getWidth = (index: number): string => {
   left: 90px;
   z-index: 1;
   width: 100%;
-  height: 100%;
   max-width: 421px;
   box-sizing: border-box;
   padding: 0 24px;
   display: flex;
   gap: 4px;
+
+  @include ui-mobile-only {
+    max-width: 100%;
+    left: 0;
+  }
 
   &__segment {
     width: 100%;
@@ -51,8 +55,11 @@ const getWidth = (index: number): string => {
     height: 100%;
     background: #fff;
     width: 0%;
-    transition: width 0.3s ease;
     border-radius: 4px;
+
+    &.active {
+      transition: width 1s ease;
+    }
   }
 }
 </style>

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from "vue";
-
 import ArrowLeft from "@/assets/icons/arrow_left.svg";
 import ArrowRight from "@/assets/icons/arrow_right.svg";
 
 const emit = defineEmits(["toggle"]);
 
-const changeStories = (state: string) => {
-  emit("toggle", state);
+const changeStories = (direction: string) => {
+  emit("toggle", direction);
 };
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -53,14 +52,18 @@ onUnmounted(() => {
     height: 40px;
     background: $primary-color;
     border-radius: $size-radius-button;
+
+    svg path {
+      fill: $secondary-color;
+    }
   }
 
   &__prev {
-    left: 0;
+    left: 4px;
   }
 
   &__next {
-    right: 0;
+    right: 4px;
   }
 }
 </style>

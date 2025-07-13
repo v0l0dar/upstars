@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { gsap } from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
 
 import Logo from "@/assets/icons/logo.svg";
 import Pause from "@/assets/icons/pause.svg";
 import Close from "@/assets/icons/close.svg";
-
 import type { Story, VideoSource } from "@/components/types/story.ts";
+
+gsap.registerPlugin(TextPlugin);
 
 const emit = defineEmits(["end", "progress"]);
 
@@ -27,11 +30,7 @@ const filteredSources = computed<VideoSource[]>(() => {
 });
 
 const toggleState = (): void => {
-  if (videoRef.value?.paused) {
-    videoRef.value?.play();
-  } else {
-    videoRef.value?.pause();
-  }
+  videoRef.value?.paused ? play() : pause();
 };
 
 const updateTime = (): void => {
@@ -45,13 +44,32 @@ const updateTime = (): void => {
   emit("progress", +progress.toFixed(0));
 };
 
+const pause = (): void => {
+  videoRef.value?.pause();
+};
+
+const play = (): void => {
+  videoRef.value?.play();
+};
+
 const restart = () => {
   if (!videoRef.value) return;
   videoRef.value.currentTime = 0;
   videoRef.value.play();
 };
 
-defineExpose({ restart });
+onMounted(() => {
+  gsap.to(".story-video__text", {
+    text: {
+      value: props.story.title || "",
+    },
+    duration: 1.5,
+    delay: 0.1,
+    ease: "power1.out",
+  });
+});
+
+defineExpose({ restart, play, pause });
 </script>
 
 <template>
@@ -60,9 +78,7 @@ defineExpose({ restart });
       <Logo />
       <div class="story-video__info">
         <div class="story-video__title">Upstars</div>
-        <div class="story-video__text" v-if="story.title">
-          {{ story.title }}
-        </div>
+        <div class="story-video__text" v-if="story.title"></div>
       </div>
       <div class="story-video__actions">
         <button @click="toggleState">
@@ -81,7 +97,7 @@ defineExpose({ restart });
       muted
       @ended="onEnded"
       @timeupdate="updateTime"
-      loading="lazy"
+      preload="auto"
     >
       <source
         v-for="(item, index) in filteredSources"
@@ -146,6 +162,10 @@ defineExpose({ restart });
     height: 100%;
     object-fit: cover;
     border-radius: 16px;
+
+    @include ui-mobile-only {
+      border-radius: 0;
+    }
   }
 }
 </style>

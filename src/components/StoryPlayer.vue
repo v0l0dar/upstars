@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { ref, defineAsyncComponent, computed } from "vue";
+import { ref, defineAsyncComponent, computed, shallowRef } from "vue";
 import type { Story } from "@/components/types/story.ts";
 import StoryNavigation from "./StoryNavigation.vue";
 import StoryProgress from "./StoryProgress.vue";
+import StoryTapNavigation from "./StoryTapNavigation.vue";
 
 const props = defineProps<{
   items: Story[];
@@ -19,12 +20,14 @@ const currentProgressVal = computed(() => currentProgress.value);
 
 const videoRef = ref<InstanceType<typeof StoryVideo> | null>(null);
 
-const toggleStories = (direction: "prev" | "next") => {
+const toggleStories = async (direction: "prev" | "next") => {
   if (direction === "next") {
     currentVideoIndex.value =
       currentVideoIndex.value < stories.value.length - 1
         ? currentVideoIndex.value + 1
         : 0;
+
+    currentProgress.value = 0;
   }
 
   if (direction === "prev") {
@@ -35,17 +38,20 @@ const toggleStories = (direction: "prev" | "next") => {
     }
 
     currentVideoIndex.value = currentVideoIndex.value - 1;
+    currentProgress.value = 0;
   }
 };
 
-const autoToggle = (): void => {
+const autoToggle = async (): Promise<void> => {
   currentVideoIndex.value =
     currentVideoIndex.value < stories.value.length - 1
       ? currentVideoIndex.value + 1
       : 0;
+
+  currentProgress.value = 0;
 };
 
-const getProgress = (progress: number) => {
+const getProgress = async (progress: number) => {
   currentProgress.value = progress;
 };
 </script>
@@ -54,7 +60,16 @@ const getProgress = (progress: number) => {
   <div class="story-player">
     <div class="story-player__content">
       <div class="store-player__list">
-        <StoryNavigation @toggle="toggleStories" />
+        <StoryNavigation
+          class="story-player__navigation"
+          @toggle="toggleStories"
+        />
+        <StoryTapNavigation
+          @toggle="toggleStories"
+          @pause="videoRef?.pause"
+          @play="videoRef?.play"
+          class="story-player__taps"
+        />
         <div class="story-player__progress">
           <StoryProgress
             :total="stories.length"
@@ -89,10 +104,28 @@ const getProgress = (progress: number) => {
     max-width: 421px;
     width: 100%;
     height: 100%;
+
+    @include ui-mobile-only {
+      max-width: 100%;
+      height: 100vh;
+    }
   }
 
   @include ui-mobile-only {
     height: 100vh;
+  }
+
+  &__navigation {
+    @include ui-mobile-only {
+      display: none;
+    }
+  }
+
+  &__taps {
+    display: none;
+    @include ui-mobile-only {
+      display: block;
+    }
   }
 }
 </style>
