@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 import Logo from "@/assets/icons/logo.svg";
 import Pause from "@/assets/icons/pause.svg";
 import Close from "@/assets/icons/close.svg";
+
 import type { Story, VideoSource } from "@/components/types/story.ts";
+
+const emit = defineEmits(["end", "progress"]);
 
 const props = defineProps<{
   story: Story;
@@ -13,7 +16,7 @@ const props = defineProps<{
 const videoRef = ref<HTMLVideoElement | null>(null);
 
 const onEnded = (): void => {
-  console.log("video ended");
+  emit("end");
 };
 
 const filteredSources = computed<VideoSource[]>(() => {
@@ -30,6 +33,25 @@ const toggleState = (): void => {
     videoRef.value?.pause();
   }
 };
+
+const updateTime = (): void => {
+  if (!videoRef.value) return;
+
+  const current = videoRef.value.currentTime;
+  const duration = videoRef.value.duration;
+
+  const progress = (current / duration) * 100;
+
+  emit("progress", +progress.toFixed(0));
+};
+
+const restart = () => {
+  if (!videoRef.value) return;
+  videoRef.value.currentTime = 0;
+  videoRef.value.play();
+};
+
+defineExpose({ restart });
 </script>
 
 <template>
@@ -55,9 +77,10 @@ const toggleState = (): void => {
       ref="videoRef"
       class="story-video__content"
       autoplay
-      muted
       playsinline
+      muted
       @ended="onEnded"
+      @timeupdate="updateTime"
       loading="lazy"
     >
       <source
@@ -78,7 +101,7 @@ const toggleState = (): void => {
 
   &__headline {
     position: absolute;
-    top: 32px;
+    top: 38px;
     padding: 0 24px;
     z-index: 1;
     width: 100%;
@@ -92,11 +115,12 @@ const toggleState = (): void => {
   &__title {
     font-size: 14px;
     font-weight: 700;
+    text-align: left;
   }
 
   &__text {
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 700;
   }
 
   &__actions {
@@ -110,6 +134,10 @@ const toggleState = (): void => {
       width: 24px;
       height: 24px;
       cursor: pointer;
+    }
+
+    svg path {
+      fill: $primary-icon-color;
     }
   }
 

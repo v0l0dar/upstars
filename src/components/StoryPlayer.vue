@@ -1,39 +1,75 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, defineAsyncComponent, computed } from "vue";
 import type { Story } from "@/components/types/story.ts";
-import StoryVideo from "./StoryVideo.vue";
+import StoryNavigation from "./StoryNavigation.vue";
+import StoryProgress from "./StoryProgress.vue";
 
-const stories = ref<Story[]>([
-  {
-    title: "Бенефіти",
-    source: [
-      {
-        src: "/videos/av1/1.mp4",
-        type: "video/av1",
-      },
-      {
-        src: "/videos/webm/1.webm",
-        type: "video/webm",
-      },
-      {
-        src: "/videos/h264/1.mp4",
-        type: "video/mp4",
-      },
-    ],
-  },
-]);
+const props = defineProps<{
+  items: Story[];
+}>();
+
+const StoryVideo = defineAsyncComponent(() => import("./StoryVideo.vue"));
+
+const stories = ref<Story[]>(props.items);
+
+const currentVideoIndex = ref<number>(0);
+const currentStory = computed(() => stories.value[currentVideoIndex.value]);
+const currentProgress = ref(0);
+const currentProgressVal = computed(() => currentProgress.value);
+
+const videoRef = ref<InstanceType<typeof StoryVideo> | null>(null);
+
+const toggleStories = (direction: "prev" | "next") => {
+  if (direction === "next") {
+    currentVideoIndex.value =
+      currentVideoIndex.value < stories.value.length - 1
+        ? currentVideoIndex.value + 1
+        : 0;
+  }
+
+  if (direction === "prev") {
+    if (currentVideoIndex.value === 0) {
+      videoRef.value?.restart?.();
+
+      return;
+    }
+
+    currentVideoIndex.value = currentVideoIndex.value - 1;
+  }
+};
+
+const autoToggle = (): void => {
+  currentVideoIndex.value =
+    currentVideoIndex.value < stories.value.length - 1
+      ? currentVideoIndex.value + 1
+      : 0;
+};
+
+const getProgress = (progress: number) => {
+  currentProgress.value = progress;
+};
 </script>
 
 <template>
   <div class="story-player">
     <div class="story-player__content">
       <div class="store-player__list">
-        <div class="story-player__overlay">progress</div>
+        <StoryNavigation @toggle="toggleStories" />
+        <div class="story-player__progress">
+          <StoryProgress
+            :total="stories.length"
+            :progress="currentProgressVal"
+            :current="currentVideoIndex"
+          />
+        </div>
         <StoryVideo
           class="story-player__item"
-          v-for="(story, i) in stories"
-          :key="i"
-          :story="story"
+          ref="videoRef"
+          v-if="currentStory"
+          :story="currentStory"
+          :key="currentStory.title"
+          @end="autoToggle"
+          @progress="getProgress"
         />
       </div>
     </div>
@@ -45,10 +81,13 @@ const stories = ref<Story[]>([
   position: relative;
   // height: 70vh;
   width: 100%;
+  max-width: 600px;
   overflow: hidden;
+  margin: 0 auto;
 
   &__item {
-    width: 431px;
+    max-width: 421px;
+    width: 100%;
     height: 100%;
   }
 
