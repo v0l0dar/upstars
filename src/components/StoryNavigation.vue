@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import ArrowLeft from "@/assets/icons/arrow_left.svg";
 import ArrowRight from "@/assets/icons/arrow_right.svg";
 
-const emit = defineEmits(["toggle"]);
+const emit = defineEmits<{
+  (e: "toggle", direction: "prev" | "next"): void;
+}>();
 
-const changeStories = (direction: string) => {
+const changeStories = (direction: "prev" | "next") => {
   emit("toggle", direction);
 };
 

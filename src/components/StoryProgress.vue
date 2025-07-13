@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from "vue";
+import { watch, ref } from "vue";
 
 const props = defineProps<{
   total: number;
@@ -7,11 +7,21 @@ const props = defineProps<{
   current: number;
 }>();
 
-const getWidth = (index: number): string => {
-  if (index < props.current) return "100%";
-  if (index === props.current) return `${props.progress}%`;
-  return "0%";
+const isReversing = ref(false);
+
+const getStyle = (index: number): string => {
+  if (index < props.current) return "scaleX(1)";
+  if (index === props.current) return `scaleX(${props.progress / 100})`;
+  return "scaleX(0)";
 };
+
+watch(
+  () => props.current,
+  (newVal, oldVal) => {
+    isReversing.value = newVal < oldVal;
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -19,8 +29,11 @@ const getWidth = (index: number): string => {
     <div class="story-progress__segment" v-for="(item, i) in total">
       <div
         class="story-progress__fill"
-        :class="{ active: i === current }"
-        :style="{ width: getWidth(i) }"
+        :class="{
+          active: i === current,
+          reversing: isReversing && i < current,
+        }"
+        :style="{ transform: getStyle(i) }"
       ></div>
     </div>
   </div>
@@ -47,18 +60,25 @@ const getWidth = (index: number): string => {
   &__segment {
     width: 100%;
     height: 4px;
-    background: rgba(255, 255, 255, 0.42);
+    background: $secondary-progress;
     border-radius: 4px;
+    overflow: hidden;
   }
 
   &__fill {
     height: 100%;
     background: #fff;
-    width: 0%;
+    transform: scaleX(0);
+    transform-origin: left;
     border-radius: 4px;
+    will-change: transform;
 
     &.active {
-      transition: width 1s ease;
+      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &.reversing {
+      transition: none;
     }
   }
 }

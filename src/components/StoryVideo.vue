@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { gsap } from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 
 import Logo from "@/assets/icons/logo.svg";
 import Pause from "@/assets/icons/pause.svg";
+import Play from "@/assets/icons/play.svg";
 import Close from "@/assets/icons/close.svg";
 import type { Story, VideoSource } from "@/components/types/story.ts";
-
-gsap.registerPlugin(TextPlugin);
 
 const emit = defineEmits(["end", "progress"]);
 
@@ -17,6 +16,8 @@ const props = defineProps<{
 }>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
+
+const isPaused = ref<boolean>(false);
 
 const onEnded = (): void => {
   emit("end");
@@ -30,6 +31,7 @@ const filteredSources = computed<VideoSource[]>(() => {
 });
 
 const toggleState = (): void => {
+  isPaused.value = !isPaused.value;
   videoRef.value?.paused ? play() : pause();
 };
 
@@ -58,6 +60,8 @@ const restart = () => {
   videoRef.value.play();
 };
 
+gsap.registerPlugin(TextPlugin);
+
 onMounted(() => {
   gsap.to(".story-video__text", {
     text: {
@@ -81,8 +85,9 @@ defineExpose({ restart, play, pause });
         <div class="story-video__text" v-if="story.title"></div>
       </div>
       <div class="story-video__actions">
-        <button @click="toggleState">
-          <Pause />
+        <button class="story-video__pause" @click="toggleState">
+          <Play v-if="isPaused" />
+          <Pause v-if="!isPaused" />
         </button>
         <a href="https://www.upstars.com/" target="_blank">
           <Close />
@@ -152,8 +157,19 @@ defineExpose({ restart, play, pause });
       cursor: pointer;
     }
 
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+    }
+
     svg path {
       fill: $primary-icon-color;
+    }
+  }
+
+  &__pause {
+    @include ui-mobile-only {
+      display: none;
     }
   }
 

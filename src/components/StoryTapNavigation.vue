@@ -2,7 +2,11 @@
 import { shallowRef } from "vue";
 import { onLongPress } from "@vueuse/core";
 
-const emit = defineEmits(["toggle", "pause", "play"]);
+const emit = defineEmits<{
+  (e: "toggle", direction: "prev" | "next"): void;
+  (e: "pause"): void;
+  (e: "play"): void;
+}>();
 
 const htmlRefOnMouseUp = shallowRef<HTMLElement | null>(null);
 

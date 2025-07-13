@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, defineAsyncComponent, computed, shallowRef } from "vue";
+import { ref, defineAsyncComponent, computed } from "vue";
 import type { Story } from "@/components/types/story.ts";
 import StoryNavigation from "./StoryNavigation.vue";
 import StoryProgress from "./StoryProgress.vue";
