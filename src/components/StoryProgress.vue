@@ -18,7 +18,7 @@ const getStyle = (index: number): string => {
 watch(
   () => props.current,
   (newVal, oldVal) => {
-    isReversing.value = newVal < oldVal;
+    isReversing.value = Number(newVal) < Number(oldVal);
   },
   { immediate: true }
 );
@@ -26,7 +26,7 @@ watch(
 
 <template>
   <div class="story-progress">
-    <div class="story-progress__segment" v-for="(item, i) in total">
+    <div class="story-progress__segment" v-for="(_item, i) in total">
       <div
         class="story-progress__fill"
         :class="{

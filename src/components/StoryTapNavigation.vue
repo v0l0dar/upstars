@@ -20,7 +20,7 @@ onLongPress(
     emit("pause");
   },
   {
-    onMouseUp: (duration: number, distance: number, isLongPress: boolean) => {
+    onMouseUp: (_duration: number, _distance: number, isLongPress: boolean) => {
       if (isLongPress) {
         emit("play");
         return;
