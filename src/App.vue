@@ -9,7 +9,7 @@ const stories = ref<Story[]>([
     source: [
       {
         src: "/videos/av1/1.mp4",
-        type: "video/av1",
+        type: "video/mp4",
       },
       {
         src: "/videos/webm/1.webm",
@@ -26,7 +26,7 @@ const stories = ref<Story[]>([
     source: [
       {
         src: "/videos/av1/2.mp4",
-        type: "video/av1",
+        type: "video/mp4",
       },
       {
         src: "/videos/webm/2.webm",
@@ -43,7 +43,7 @@ const stories = ref<Story[]>([
     source: [
       {
         src: "/videos/av1/3.mp4",
-        type: "video/av1",
+        type: "video/mp4",
       },
       {
         src: "/videos/webm/3.webm",
