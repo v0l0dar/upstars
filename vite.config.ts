@@ -4,6 +4,7 @@ import svgLoader from "vite-svg-loader";
 import path from "path";
 
 export default defineConfig({
+  base: "/upstars/",
   plugins: [vue(), svgLoader()],
   css: {
     preprocessorOptions: {
