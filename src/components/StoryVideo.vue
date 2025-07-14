@@ -11,6 +11,8 @@ import SoundOn from "@/assets/icons/sound_on.svg";
 import SoundOff from "@/assets/icons/sound_off.svg";
 import type { Story, VideoSource } from "@/components/types/story.ts";
 
+const base = import.meta.env.BASE_URL;
+
 const emit = defineEmits<{
   (event: "end"): void;
   (event: "progress", value: number): void;
@@ -124,7 +126,7 @@ defineExpose({ restart, play, pause });
       <source
         v-for="(item, index) in filteredSources"
         :key="index"
-        :src="item.src"
+        :src="`${base}${item.src}`"
         :type="item.type"
       />
       Your browser does not support the video tag.
