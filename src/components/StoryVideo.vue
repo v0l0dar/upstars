@@ -7,21 +7,24 @@ import Logo from "@/assets/icons/logo.svg";
 import Pause from "@/assets/icons/pause.svg";
 import Play from "@/assets/icons/play.svg";
 import Close from "@/assets/icons/close.svg";
+import SoundOn from "@/assets/icons/sound_on.svg";
+import SoundOff from "@/assets/icons/sound_off.svg";
 import type { Story, VideoSource } from "@/components/types/story.ts";
 
-const emit = defineEmits(["end", "progress"]);
+const emit = defineEmits<{
+  (event: "end"): void;
+  (event: "progress", value: number): void;
+  (event: "muted", value: boolean): void;
+}>();
 
 const props = defineProps<{
   story: Story;
+  muted: boolean;
 }>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
-
 const isPaused = ref<boolean>(false);
-
-const onEnded = (): void => {
-  emit("end");
-};
+const isMuted = ref<boolean>(props.muted);
 
 const filteredSources = computed<VideoSource[]>(() => {
   if (!props.story.source.length) return [];
@@ -46,6 +49,10 @@ const updateTime = (): void => {
   emit("progress", +progress.toFixed(0));
 };
 
+const onEnded = (): void => {
+  emit("end");
+};
+
 const pause = (): void => {
   videoRef.value?.pause();
 };
@@ -58,6 +65,12 @@ const restart = () => {
   if (!videoRef.value) return;
   videoRef.value.currentTime = 0;
   videoRef.value.play();
+};
+
+const setSound = (): void => {
+  isMuted.value = !isMuted.value;
+
+  emit("muted", isMuted.value);
 };
 
 gsap.registerPlugin(TextPlugin);
@@ -85,6 +98,10 @@ defineExpose({ restart, play, pause });
         <div class="story-video__text" v-if="story.title"></div>
       </div>
       <div class="story-video__actions">
+        <button class="story-video__sound" @click="setSound">
+          <SoundOff v-if="isMuted" />
+          <SoundOn v-if="!isMuted" />
+        </button>
         <button class="story-video__pause" @click="toggleState">
           <Play v-if="isPaused" />
           <Pause v-if="!isPaused" />
@@ -99,7 +116,7 @@ defineExpose({ restart, play, pause });
       class="story-video__content"
       autoplay
       playsinline
-      muted
+      :muted="muted"
       @ended="onEnded"
       @timeupdate="updateTime"
       preload="auto"

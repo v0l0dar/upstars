@@ -12,13 +12,13 @@ const props = defineProps<{
 const StoryVideo = defineAsyncComponent(() => import("./StoryVideo.vue"));
 
 const stories = ref<Story[]>(props.items);
-
 const currentVideoIndex = ref<number>(0);
-const currentStory = computed(() => stories.value[currentVideoIndex.value]);
 const currentProgress = ref(0);
-const currentProgressVal = computed(() => currentProgress.value);
-
+const isMuted = ref<boolean>(true);
 const videoRef = ref<InstanceType<typeof StoryVideo> | null>(null);
+
+const currentProgressVal = computed(() => currentProgress.value);
+const currentStory = computed(() => stories.value[currentVideoIndex.value]);
 
 const toggleStories = async (direction: "prev" | "next") => {
   if (direction === "next") {
@@ -54,6 +54,10 @@ const autoToggle = async (): Promise<void> => {
 const getProgress = async (progress: number) => {
   currentProgress.value = progress;
 };
+
+const setMuted = (val: boolean): void => {
+  isMuted.value = val;
+};
 </script>
 
 <template>
@@ -83,6 +87,8 @@ const getProgress = async (progress: number) => {
           v-if="currentStory"
           :story="currentStory"
           :key="currentStory.title"
+          :muted="isMuted"
+          @muted="setMuted"
           @end="autoToggle"
           @progress="getProgress"
         />
