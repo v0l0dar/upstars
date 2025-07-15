@@ -6,4 +6,5 @@ export interface VideoSource {
 export interface Story {
   title: string;
   source: VideoSource[];
+  id?: number;
 }

@@ -54,6 +54,14 @@ onUnmounted(() => {
     height: 40px;
     background: $primary-color;
     border-radius: $size-radius-button;
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        filter: brightness(120%);
+        transform: scale(1.05);
+      }
+    }
 
     svg path {
       fill: $secondary-color;

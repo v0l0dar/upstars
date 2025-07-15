@@ -1,67 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import StoryPlayer from "./components/StoryPlayer.vue";
-import type { Story } from "@/components/types/story.ts";
-
-const stories = ref<Story[]>([
-  {
-    title: "Бенефіти",
-    source: [
-      {
-        src: "/videos/av1/1.mp4",
-        type: "video/mp4",
-      },
-      {
-        src: "/videos/webm/1.webm",
-        type: "video/webm",
-      },
-      {
-        src: "/videos/h264/1.mp4",
-        type: "video/mp4",
-      },
-    ],
-  },
-  {
-    title: "Домашні улюбленці",
-    source: [
-      {
-        src: "/videos/av1/2.mp4",
-        type: "video/mp4",
-      },
-      {
-        src: "/videos/webm/2.webm",
-        type: "video/webm",
-      },
-      {
-        src: "/videos/h264/2.mp4",
-        type: "video/mp4",
-      },
-    ],
-  },
-  {
-    title: "Upcharity 2.0",
-    source: [
-      {
-        src: "/videos/av1/3.mp4",
-        type: "video/mp4",
-      },
-      {
-        src: "/videos/webm/3.webm",
-        type: "video/webm",
-      },
-      {
-        src: "/videos/h264/3.mp4",
-        type: "video/mp4",
-      },
-    ],
-  },
-]);
+import { data } from "@/mockup/stories";
 </script>
 
 <template>
   <main class="app">
     <div class="app__content">
-      <StoryPlayer :items="stories" />
+      <StoryPlayer :items="data" />
     </div>
   </main>
 </template>

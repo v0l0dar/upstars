@@ -11,7 +11,13 @@ const props = defineProps<{
 
 const StoryVideo = defineAsyncComponent(() => import("./StoryVideo.vue"));
 
-const stories = ref<Story[]>(props.items);
+const stories = computed<Story[]>(() =>
+  props.items.map((story, index) => ({
+    ...story,
+    id: story?.id ?? index + 1,
+  }))
+);
+
 const currentVideoIndex = ref<number>(0);
 const currentProgress = ref(0);
 const isMuted = ref<boolean>(true);
@@ -21,18 +27,18 @@ const currentProgressVal = computed(() => currentProgress.value);
 const currentStory = computed(() => stories.value[currentVideoIndex.value]);
 
 const toggleStories = async (direction: "prev" | "next") => {
+  const maxIndex = stories.value.length - 1;
+
   if (direction === "next") {
     currentVideoIndex.value =
-      currentVideoIndex.value < stories.value.length - 1
-        ? currentVideoIndex.value + 1
-        : 0;
+      currentVideoIndex.value < maxIndex ? currentVideoIndex.value + 1 : 0;
 
     currentProgress.value = 0;
   }
 
   if (direction === "prev") {
     if (currentVideoIndex.value === 0) {
-      videoRef.value?.restart?.();
+      currentVideoIndex.value = maxIndex;
 
       return;
     }
@@ -86,7 +92,7 @@ const setMuted = (val: boolean): void => {
           ref="videoRef"
           v-if="currentStory"
           :story="currentStory"
-          :key="currentStory.title"
+          :key="currentStory.id"
           :muted="isMuted"
           @muted="setMuted"
           @end="autoToggle"
@@ -100,11 +106,14 @@ const setMuted = (val: boolean): void => {
 <style lang="scss">
 .story-player {
   position: relative;
-  // height: 70vh;
   width: 100%;
   max-width: 600px;
   overflow: hidden;
   margin: 0 auto;
+
+  @include ui-mobile-only {
+    max-width: 100%;
+  }
 
   &__item {
     max-width: 421px;
@@ -113,12 +122,7 @@ const setMuted = (val: boolean): void => {
 
     @include ui-mobile-only {
       max-width: 100%;
-      height: 100vh;
     }
-  }
-
-  @include ui-mobile-only {
-    height: 100vh;
   }
 
   &__navigation {

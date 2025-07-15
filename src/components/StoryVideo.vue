@@ -82,8 +82,8 @@ onMounted(() => {
     text: {
       value: props.story.title || "",
     },
-    duration: 1.5,
-    delay: 0.1,
+    duration: (props.story.title.length || 1) * 0.15,
+    delay: 0.15,
     ease: "power1.out",
   });
 });
@@ -108,29 +108,30 @@ defineExpose({ restart, play, pause });
           <Play v-if="isPaused" />
           <Pause v-if="!isPaused" />
         </button>
-        <a href="https://www.upstars.com/" target="_blank">
+        <a href="https://www.upstars.com/">
           <Close />
         </a>
       </div>
     </div>
-    <video
-      ref="videoRef"
-      class="story-video__content"
-      autoplay
-      playsinline
-      :muted="muted"
-      @ended="onEnded"
-      @timeupdate="updateTime"
-      preload="auto"
-    >
-      <source
-        v-for="(item, index) in filteredSources"
-        :key="index"
-        :src="`${base}${item.src}`"
-        :type="item.type"
-      />
-      Your browser does not support the video tag.
-    </video>
+    <div class="story-video__container">
+      <video
+        ref="videoRef"
+        class="story-video__content"
+        autoplay
+        playsinline
+        :muted="muted"
+        @ended="onEnded"
+        @timeupdate="updateTime"
+        preload="auto"
+      >
+        <source
+          v-for="(item, index) in filteredSources"
+          :key="index"
+          :src="`${base}${item.src}`"
+          :type="item.type"
+        />
+      </video>
+    </div>
   </div>
 </template>
 
@@ -174,6 +175,13 @@ defineExpose({ restart, play, pause });
       width: 24px;
       height: 24px;
       cursor: pointer;
+      transition: transform 0.3s linear;
+
+      @media (hover: hover) {
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
     }
 
     svg {
@@ -189,6 +197,22 @@ defineExpose({ restart, play, pause });
   &__pause {
     @include ui-mobile-only {
       display: none;
+    }
+  }
+
+  &__container {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #121212;
+    height: 80vh;
+
+    @include ui-mobile-only {
+      height: 100vh;
+      border-radius: 0;
+      aspect-ratio: auto;
     }
   }
 

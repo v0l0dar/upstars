@@ -4,6 +4,14 @@ Interactive video player inspired by Instagram Stories, built with **Vue 3**, **
 
 ---
 
+## ✨ Live Demo
+
+Check out the live version of the **UPSTARS Video Stories Player** here:
+
+🔗 [https://v0l0dar.github.io/upstars/index.html](https://v0l0dar.github.io/upstars/index.html)
+
+---
+
 ## 🛠️ Tech Stack
 
 - Vue 3 (Composition API)
