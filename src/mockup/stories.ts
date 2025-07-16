@@ -6,7 +6,7 @@ export const data: Story[] = [
     source: [
       {
         src: "/videos/av1/1.mp4",
-        type: "video/mp4",
+        type: 'video/mp4; codecs="av01.0.05M.08"',
       },
       {
         src: "/videos/webm/1.webm",
@@ -23,7 +23,7 @@ export const data: Story[] = [
     source: [
       {
         src: "/videos/av1/2.mp4",
-        type: "video/mp4",
+        type: 'video/mp4; codecs="av01.0.05M.08"',
       },
       {
         src: "/videos/webm/2.webm",
@@ -40,7 +40,7 @@ export const data: Story[] = [
     source: [
       {
         src: "/videos/av1/3.mp4",
-        type: "video/mp4",
+        type: 'video/mp4; codecs="av01.0.05M.08"',
       },
       {
         src: "/videos/webm/3.webm",
