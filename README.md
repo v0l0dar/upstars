@@ -32,8 +32,8 @@ Check out the live version of the **UPSTARS Video Stories Player** here:
 ## 📦 Getting Started
 
 ```bash
-git clone https://github.com/v0l0dar/upstart.git
-cd upstart
+git clone https://github.com/v0l0dar/upstars.git
+cd upstars
 npm install
 npm run dev
 ```
