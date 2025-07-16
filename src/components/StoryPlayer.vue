@@ -75,10 +75,10 @@ const setMuted = (val: boolean): void => {
           @toggle="toggleStories"
         />
         <StoryTapNavigation
+          class="story-player__taps"
           @toggle="toggleStories"
           @pause="videoRef?.pause"
           @play="videoRef?.play"
-          class="story-player__taps"
         />
         <div class="story-player__progress">
           <StoryProgress
@@ -88,9 +88,9 @@ const setMuted = (val: boolean): void => {
           />
         </div>
         <StoryVideo
-          class="story-player__item"
-          ref="videoRef"
           v-if="currentStory"
+          ref="videoRef"
+          class="story-player__item"
           :story="currentStory"
           :key="currentStory.id"
           :muted="isMuted"
