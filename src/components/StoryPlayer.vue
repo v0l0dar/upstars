@@ -26,20 +26,27 @@ const videoRef = ref<InstanceType<typeof StoryVideo> | null>(null);
 const currentProgressVal = computed(() => currentProgress.value);
 const currentStory = computed(() => stories.value[currentVideoIndex.value]);
 
+const isDisabledPrev = computed<boolean>(() => {
+  return currentVideoIndex.value === 0;
+});
+
+const isDisabledNext = computed<boolean>(() => {
+  return currentVideoIndex.value === stories.value.length - 1;
+});
+
 const toggleStories = async (direction: "prev" | "next") => {
   const maxIndex = stories.value.length - 1;
 
   if (direction === "next") {
-    currentVideoIndex.value =
-      currentVideoIndex.value < maxIndex ? currentVideoIndex.value + 1 : 0;
-
-    currentProgress.value = 0;
+    if (currentVideoIndex.value < maxIndex) {
+      currentVideoIndex.value += 1;
+      currentProgress.value = 0;
+    }
+    return;
   }
 
   if (direction === "prev") {
     if (currentVideoIndex.value === 0) {
-      currentVideoIndex.value = maxIndex;
-
       return;
     }
 
@@ -49,6 +56,8 @@ const toggleStories = async (direction: "prev" | "next") => {
 };
 
 const autoToggle = async (): Promise<void> => {
+  if (currentVideoIndex.value === stories.value.length - 1) return;
+
   currentVideoIndex.value =
     currentVideoIndex.value < stories.value.length - 1
       ? currentVideoIndex.value + 1
@@ -72,6 +81,8 @@ const setMuted = (val: boolean): void => {
       <div class="store-player__list">
         <StoryNavigation
           class="story-player__navigation"
+          :disabledPrev="isDisabledPrev"
+          :disabledNext="isDisabledNext"
           @toggle="toggleStories"
         />
         <StoryTapNavigation

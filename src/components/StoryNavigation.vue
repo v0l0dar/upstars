@@ -3,6 +3,11 @@ import { onMounted, onUnmounted } from "vue";
 import ArrowLeft from "@/assets/icons/arrow_left.svg";
 import ArrowRight from "@/assets/icons/arrow_right.svg";
 
+defineProps<{
+  disabledPrev: boolean;
+  disabledNext: boolean;
+}>();
+
 const emit = defineEmits<{
   (e: "toggle", direction: "prev" | "next"): void;
 }>();
@@ -30,10 +35,18 @@ onUnmounted(() => {
 
 <template>
   <div class="story-navigation">
-    <button @click="changeStories('prev')" class="story-navigation__prev">
+    <button
+      :disabled="disabledPrev"
+      @click="changeStories('prev')"
+      class="story-navigation__prev"
+    >
       <ArrowLeft />
     </button>
-    <button @click="changeStories('next')" class="story-navigation__next">
+    <button
+      :disabled="disabledNext"
+      @click="changeStories('next')"
+      class="story-navigation__next"
+    >
       <ArrowRight />
     </button>
   </div>
@@ -56,8 +69,13 @@ onUnmounted(() => {
     border-radius: $size-radius-button;
     transition: transform 0.3s ease, filter 0.3s ease;
 
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
     @media (hover: hover) {
-      &:hover {
+      &:not(:disabled):hover {
         filter: brightness(120%);
         transform: scale(1.05);
       }

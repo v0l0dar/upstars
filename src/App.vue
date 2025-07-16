@@ -4,28 +4,18 @@ import { data } from "@/mockup/stories";
 </script>
 
 <template>
-  <main class="app">
-    <div class="app__content">
-      <StoryPlayer :items="data" />
-    </div>
+  <main class="layout">
+    <StoryPlayer :items="data" />
   </main>
 </template>
 
 <style lang="scss">
-.app {
+.layout {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   min-height: 100vh;
   justify-content: center;
-
-  &__content {
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    text-align: center;
-    font-size: 16px;
-  }
 }
 </style>
