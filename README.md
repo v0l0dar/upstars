@@ -8,7 +8,7 @@ Interactive video player inspired by Instagram Stories, built with **Vue 3**, **
 
 Check out the live version of the **UPSTARS Video Stories Player** here:
 
-🔗 [https://v0l0dar.github.io/upstars/index.html](https://v0l0dar.github.io/upstars/index.html)
+🔗 [https://v0l0dar.github.io/upstars](https://v0l0dar.github.io/upstars/index.html)
 
 ---
 
