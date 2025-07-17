@@ -53,7 +53,7 @@ onLongPress(
 <style lang="scss">
 .story-tap-navigation {
   height: 100%;
-  width: 100;
+  width: 100%;
 
   &__prev,
   &__next {

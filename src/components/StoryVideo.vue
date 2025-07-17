@@ -210,7 +210,7 @@ defineExpose({ restart, play, pause });
     height: 80vh;
 
     @include ui-mobile-only {
-      height: 100vh;
+      height: 100dvh;
       border-radius: 0;
       aspect-ratio: auto;
     }
